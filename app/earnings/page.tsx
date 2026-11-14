@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { statsApi } from "@/lib/api";
-import { formatDay, formatMoney, formatMonth, toMonthString } from "@/lib/format";
+import { formatDay, formatHours, formatMoney, formatMonth, toMonthString } from "@/lib/format";
 import type { PaymentTotals, PaymentType } from "@/lib/types";
 import { useLoad } from "@/lib/use-load";
 import { Card, CardHeader } from "../components/ui/Card";
@@ -26,11 +26,21 @@ function TotalsRow({ label, totals }: { label: string; totals: PaymentTotals }) 
       <div>
         <p className="text-[15px] text-fg">{label}</p>
         <p className="tabular-ticker text-[13px] text-muted">
-          {totals.paymentCount} paid · {formatMoney(totals.tips)} tips
+          {totals.paymentCount} paid · {formatHours(totals.hoursWorked)} · {formatMoney(totals.tips)} tips
         </p>
       </div>
       <p className="tabular-ticker text-[15px] font-medium text-fg">{formatMoney(totals.withTips)}</p>
     </li>
+  );
+}
+
+/** Summary strip cell: muted label over a medium value. */
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-surface px-4 py-3">
+      <p className="text-[13px] text-muted">{label}</p>
+      <p className="tabular-ticker mt-0.5 text-[17px] font-medium text-fg">{value}</p>
+    </div>
   );
 }
 
@@ -96,9 +106,14 @@ export default function EarningsPage() {
               {formatMoney(data.total.withTips)}
             </p>
             <p className="tabular-ticker text-sm text-muted">
-              {formatMoney(data.total.beforeTips)} + {formatMoney(data.total.tips)} tips · {data.total.paymentCount}{" "}
-              {data.total.paymentCount === 1 ? "payment" : "payments"}
+              {formatMoney(data.total.beforeTips)} + {formatMoney(data.total.tips)} tips
             </p>
+          </div>
+
+          {/* Summary strip: one card split by 1px line gaps. */}
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
+            <Fact label="Hours worked" value={formatHours(data.total.hoursWorked)} />
+            <Fact label="Payments" value={String(data.total.paymentCount)} />
           </div>
 
           <Card className="px-4 pt-4 sm:px-6 sm:pt-6">

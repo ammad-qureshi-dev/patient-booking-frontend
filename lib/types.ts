@@ -37,6 +37,8 @@ export type PaymentTotals = {
   beforeTips: number;
   tips: number;
   withTips: number;
+  /** From appointment lengths, or entered directly for imported records. */
+  hoursWorked: number;
 };
 
 export type PaymentStats = {

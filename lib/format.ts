@@ -74,6 +74,13 @@ export function formatMonth(date: Date): string {
   return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+/** 1 -> "1 hr", 7.5 -> "7.5 hrs". "—" if the backend didn't send it. */
+export function formatHours(hours: number | null | undefined): string {
+  if (hours === null || hours === undefined) return "—";
+  const value = Number(hours.toFixed(2));
+  return `${value} ${value === 1 ? "hr" : "hrs"}`;
+}
+
 export function formatMoney(amount: number | null | undefined): string {
   if (amount === null || amount === undefined) return "—";
   return new Intl.NumberFormat("en-US", {

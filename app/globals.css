@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* `light:` variant — matches when the user has switched to the light theme. */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* Quiet, near-monochrome palette (same tokens as Bidder). Dark is the default theme;
+     light is opt-in via the top-bar toggle (stored in localStorage, applied as
+     <html data-theme="light">). The primary button is `fg`; `accent` blue is only for
+     links and focus. */
+  --color-canvas: #0b0b0d;
+  --color-surface: #131316;
+  --color-subtle: #1b1b1f;
+  --color-line: #25252a;
+  --color-line-strong: #323238;
+
+  --color-fg: #ededef;
+  --color-muted: #a1a1a9;
+  --color-faint: #6c6c74;
+
+  --color-accent: #4aa3ff;
+  --color-accent-soft: #10233a;
+
+  --color-success: #3ccb7f;
+  --color-success-soft: #10261a;
+  --color-danger: #f0674f;
+  --color-danger-soft: #2c1613;
+  --color-warning: #e3a43b;
+
+  /* Calendar heat map: how booked a day is (free → 5+). */
+  --color-heat-free: #3ccb7f;
+  --color-heat-low: #f2d45c;
+  --color-heat-mid: #f59e42;
+  --color-heat-high: #f0674f;
+
+  --animate-slide-up: slide-up 220ms ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+html {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-canvas: #f4f4f6;
+  --color-surface: #ffffff;
+  --color-subtle: #f6f6f8;
+  --color-line: #ebebee;
+  --color-line-strong: #dddde2;
+
+  --color-fg: #111013;
+  --color-muted: #6e6e76;
+  --color-faint: #a1a1a8;
+
+  --color-accent: #1789fe;
+  --color-accent-soft: #eaf3ff;
+
+  --color-success: #15924a;
+  --color-success-soft: #e9f6ee;
+  --color-danger: #d83b21;
+  --color-danger-soft: #fcece9;
+  --color-warning: #b26b00;
+
+  --color-heat-free: #22a55a;
+  --color-heat-low: #e8c32e;
+  --color-heat-mid: #f08a24;
+  --color-heat-high: #e0452b;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  /* Stop iOS from enlarging text on rotate; taps shouldn't flash a gray box. */
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Money and times: fixed-width digits so values line up in lists. */
+.tabular-ticker {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

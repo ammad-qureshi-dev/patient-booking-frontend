@@ -1,3 +1,4 @@
+import { torontoToday } from "./format";
 import type { Appointment, AppointmentRequest, PaymentRequest, PaymentStats } from "./types";
 
 /** Next proxies /api/* to the backend (see next.config.ts). */
@@ -42,8 +43,9 @@ export const appointmentApi = {
   create: (input: AppointmentRequest) => post<string>("/appointment", input),
   update: (id: string, input: AppointmentRequest) => put<string>(`/appointment/${id}`, input),
 
-  today: () => get<Appointment[]>("/appointment/today"),
-  tomorrow: () => get<Appointment[]>("/appointment/tomorrow"),
+  // The backend's /today endpoints use the server's clock (UTC on Render), so "today" is
+  // always sent as an explicit Toronto date instead.
+  today: () => appointmentApi.between(torontoToday(), torontoToday()),
   /** Dates are "yyyy-MM-dd", both inclusive. */
   between: (fromDate: string, toDate: string) => get<Appointment[]>(`/appointment/from/${fromDate}/to/${toDate}`),
 
@@ -59,7 +61,7 @@ export const appointmentApi = {
 };
 
 export const statsApi = {
-  today: () => get<PaymentStats>("/payment/stats/today"),
+  today: () => get<PaymentStats>(`/payment/stats/from/${torontoToday()}/to/${torontoToday()}`),
   /** Month is "yyyy-MM". */
   month: (month: string) => get<PaymentStats>(`/payment/stats/month/${month}`),
 };

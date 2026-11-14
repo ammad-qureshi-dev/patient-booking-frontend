@@ -1,9 +1,36 @@
 import type { AppointmentLength } from "./types";
 
-// The backend sends local date-times with no zone ("2026-11-15T09:30:00") and plain dates
-// ("2026-11-15"). These helpers build and read those strings without any timezone shifting.
+// The business runs on Toronto time. The backend sends Toronto wall-clock date-times with no
+// zone ("2026-11-15T09:30:00") and plain dates ("2026-11-15"). These helpers build and read
+// those strings as-is, without any timezone shifting, so they show the same on any device.
+// "Now" always comes from torontoNow(), never `new Date()`, so a phone set to another
+// timezone (or travelling) still sees Toronto's today.
+
+export const TIME_ZONE = "America/Toronto";
 
 const pad = (n: number) => String(n).padStart(2, "0");
+
+const torontoClock = new Intl.DateTimeFormat("en-CA", {
+  timeZone: TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** The current Toronto wall-clock time, as a Date whose year/month/day/hours/minutes read as Toronto's. */
+export function torontoNow(): Date {
+  const parts = torontoClock.formatToParts(new Date());
+  const get = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((p) => p.type === type)!.value);
+  return new Date(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"));
+}
+
+/** Today's date in Toronto, "yyyy-MM-dd". */
+export function torontoToday(): string {
+  return toDateString(torontoNow());
+}
 
 export const LENGTHS: { value: AppointmentLength; label: string; minutes: number }[] = [
   { value: "HALF_HOUR", label: "30 min", minutes: 30 },
@@ -20,7 +47,7 @@ export function lengthMinutes(length: AppointmentLength): number {
   return LENGTHS.find((l) => l.value === length)?.minutes ?? 0;
 }
 
-/** Date -> "yyyy-MM-dd" in local time. */
+/** Date -> "yyyy-MM-dd" from its wall-clock fields. */
 export function toDateString(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }

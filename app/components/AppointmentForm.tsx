@@ -10,6 +10,8 @@ import {
   parseLocal,
   timeToMinutes,
   toDateString,
+  torontoNow,
+  torontoToday,
 } from "@/lib/format";
 import type { Appointment, AppointmentLength, AppointmentRequest } from "@/lib/types";
 import { useLoad } from "@/lib/use-load";
@@ -35,7 +37,7 @@ function slotProblem(
   editingId?: string,
 ): string | null {
   const end = start + lengthMinutes(length);
-  const now = new Date();
+  const now = torontoNow();
   if (date === toDateString(now) && start <= now.getHours() * 60 + now.getMinutes()) return "past";
   const clash = booked.some(
     (a) =>
@@ -56,7 +58,7 @@ type Props = {
 
 export function AppointmentForm({ initial, submitLabel, onSubmit }: Props) {
   const [fullName, setFullName] = useState(initial?.fullName ?? "");
-  const [date, setDate] = useState(initial ? initial.startTime.slice(0, 10) : toDateString(new Date()));
+  const [date, setDate] = useState(initial ? initial.startTime.slice(0, 10) : torontoToday());
   const [time, setTime] = useState(initial ? initial.startTime.slice(11, 16) : "");
   const [length, setLength] = useState<AppointmentLength>(initial?.length ?? "ONE_HOUR");
   const [price, setPrice] = useState(initial ? String(initial.price) : "");
@@ -104,7 +106,7 @@ export function AppointmentForm({ initial, submitLabel, onSubmit }: Props) {
     }
   }
 
-  const today = toDateString(new Date());
+  const today = torontoToday();
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">

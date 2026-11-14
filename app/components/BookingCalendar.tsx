@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { appointmentApi } from "@/lib/api";
-import { formatDay, formatMonth, toDateString } from "@/lib/format";
+import { formatDay, formatMonth, toDateString, torontoNow, torontoToday } from "@/lib/format";
 import type { Appointment } from "@/lib/types";
 import { useLoad } from "@/lib/use-load";
 import { AppointmentRow } from "./AppointmentRow";
@@ -50,9 +50,9 @@ function countByDay(appointments: Appointment[]) {
 
 /** Month heat map of how booked each day is; tap a day to see its bookings in order. */
 export function BookingCalendar() {
-  const today = toDateString(new Date());
+  const today = torontoToday();
   const [month, setMonth] = useState(() => {
-    const now = new Date();
+    const now = torontoNow();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
   const [selected, setSelected] = useState(today);

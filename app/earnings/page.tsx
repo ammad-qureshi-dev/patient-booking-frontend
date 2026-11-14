@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { statsApi } from "@/lib/api";
-import { formatDay, formatHours, formatMoney, formatMonth, toMonthString } from "@/lib/format";
+import { formatDay, formatHours, formatMoney, formatMonth, toMonthString, torontoNow } from "@/lib/format";
 import type { PaymentTotals, PaymentType } from "@/lib/types";
 import { useLoad } from "@/lib/use-load";
 import { Card, CardHeader } from "../components/ui/Card";
@@ -47,9 +47,9 @@ function Fact({ label, value }: { label: string; value: string }) {
 export default function EarningsPage() {
   const [view, setView] = useState<View>("today");
   // Any day in the month being viewed; arrows step it a month at a time.
-  const [month, setMonth] = useState(() => new Date());
+  const [month, setMonth] = useState(torontoNow);
   const monthKey = toMonthString(month);
-  const isCurrentMonth = monthKey === toMonthString(new Date());
+  const isCurrentMonth = monthKey === toMonthString(torontoNow());
 
   const { data, error, loading } = useLoad(
     useCallback(() => (view === "today" ? statsApi.today() : statsApi.month(monthKey)), [view, monthKey]),

@@ -16,14 +16,29 @@ export function Field({ label, error, hint, htmlFor, children }: FieldProps & { 
   );
 }
 
-// 16px text stops iOS Safari from zooming in when a field is focused.
-export const fieldClass =
-  "min-h-12 w-full rounded-[10px] border border-line bg-surface px-3.5 font-sans text-base text-fg outline-none transition-colors placeholder:text-faint hover:border-line-strong focus:border-fg";
+const fieldBase =
+  "w-full rounded-[10px] border border-line bg-surface px-3.5 font-sans text-fg outline-none transition-colors placeholder:text-faint hover:border-line-strong focus:border-fg";
 
-export function Input({ label, error, hint, id, className = "", ...props }: InputHTMLAttributes<HTMLInputElement> & FieldProps) {
+// 16px text stops iOS Safari from zooming in when a field is focused.
+export const fieldClass = `${fieldBase} min-h-12 text-base`;
+
+/** Taller with larger text on phones, for the fields people tap most (date, time). */
+const bigFieldClass = `${fieldBase} min-h-14 text-lg sm:min-h-12 sm:text-base`;
+
+type SizeProps = { big?: boolean };
+
+export function Input({
+  label,
+  error,
+  hint,
+  id,
+  big,
+  className = "",
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & FieldProps & SizeProps) {
   return (
     <Field label={label} error={error} hint={hint} htmlFor={id}>
-      <input id={id} className={`${fieldClass} ${className}`} {...props} />
+      <input id={id} className={`${big ? bigFieldClass : fieldClass} ${className}`} {...props} />
     </Field>
   );
 }
@@ -47,18 +62,27 @@ export function MoneyInput({ label, error, hint, id, ...props }: InputHTMLAttrib
   );
 }
 
+/** Starts one line tall like an input and grows with its content (or by dragging the corner). */
 export function Textarea({ label, error, hint, id, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & FieldProps) {
   return (
     <Field label={label} error={error} hint={hint} htmlFor={id}>
-      <textarea id={id} className={`${fieldClass} min-h-24 resize-y py-3`} {...props} />
+      <textarea id={id} rows={1} className={`${fieldClass} field-sizing-content resize-y py-[11px]`} {...props} />
     </Field>
   );
 }
 
-export function Select({ label, error, hint, id, children, ...props }: SelectHTMLAttributes<HTMLSelectElement> & FieldProps) {
+export function Select({
+  label,
+  error,
+  hint,
+  id,
+  big,
+  children,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & FieldProps & SizeProps) {
   return (
     <Field label={label} error={error} hint={hint} htmlFor={id}>
-      <select id={id} className={fieldClass} {...props}>
+      <select id={id} className={big ? bigFieldClass : fieldClass} {...props}>
         {children}
       </select>
     </Field>

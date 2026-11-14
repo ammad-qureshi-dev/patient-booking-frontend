@@ -135,6 +135,7 @@ export function AppointmentForm({ initial, submitLabel, onSubmit }: Props) {
         <Input
           id="date"
           type="date"
+          big
           label="Date"
           value={date}
           min={today}
@@ -151,6 +152,7 @@ export function AppointmentForm({ initial, submitLabel, onSubmit }: Props) {
         </Field>
         <Select
           id="time"
+          big
           label="Start time"
           value={time}
           onChange={(e) => setTime(e.target.value)}

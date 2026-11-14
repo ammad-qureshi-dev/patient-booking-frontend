@@ -10,9 +10,9 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-The backend must be running at `API_URL` (default `http://localhost:8080`, set in
-`.env.development`). The browser calls `/api/*` and Next proxies it there, so the backend
-needs no CORS setup.
+In development the app talks to the Render backend set as `API_URL` in `.env.development`
+(switch it to `http://localhost:8080` to use a local backend, then restart). The browser calls
+`/api/*` and Next proxies it there, so the backend needs no CORS setup.
 
 ## Pages
 

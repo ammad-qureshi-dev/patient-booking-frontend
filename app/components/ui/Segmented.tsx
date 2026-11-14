@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
 /**
- * Segmented control: a gray track with the selected option raised as a surface pill.
+ * Segmented control: a gray track with the selected option as a solid `fg` pill, so the
+ * choice is obvious at a glance in both themes.
  * Options share the full width so each one is an easy thumb target.
  */
 export function Segmented<T extends string>({
@@ -27,7 +28,7 @@ export function Segmented<T extends string>({
             aria-checked={active}
             onClick={() => onChange(o.value)}
             className={`min-h-10 flex-1 whitespace-nowrap rounded-lg px-2 text-sm font-medium transition-colors ${
-              active ? "bg-surface text-fg shadow-[0_0_0_1px_var(--color-line)]" : "text-muted hover:text-fg"
+              active ? "bg-fg text-surface" : "text-muted hover:text-fg"
             }`}
           >
             {o.label}
